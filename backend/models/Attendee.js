@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// Define the Attendee schema
+
 const attendeeSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -13,13 +13,13 @@ const attendeeSchema = new mongoose.Schema({
     lowercase: true,
   },
   eventId: {
-    type: mongoose.Schema.Types.ObjectId, // Reference to the event
-    ref: "Event", // Reference the Event model
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Event",
     required: true,
   },
 });
 
-// Create the Attendee model
+
 const Attendee = mongoose.model("Attendee", attendeeSchema);
 
 module.exports = Attendee;

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import { rsvpToEvent } from "../api/api";
+import { useState, useEffect } from "react";
+import { rsvpToEvent, getRSVPStatus } from "../api/api"; // Assuming you have an API method to get the RSVP status
 import {
   Button,
   RadioGroup,
@@ -11,10 +11,30 @@ import {
   Box,
 } from "@mui/material";
 
-const RSVPForm = ({ eventId }) => {
+const RSVPForm = ({ eventId, userId }) => {
   const [status, setStatus] = useState("Maybe");
-  const [submitted, setSubmitted] = useState(false); // To track form submission status
-  const [error, setError] = useState(""); // State to track errors
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+
+  useEffect(() => {
+    const fetchRSVPStatus = async () => {
+      try {
+        const response = await getRSVPStatus(eventId, userId);
+        if (response.data) {
+          setStatus(response.data.status);
+          setSubmitted(true); 
+        }
+      } catch (error) {
+        console.error("Error fetching RSVP status:", error);
+        setError("Failed to load RSVP status");
+      }
+    };
+
+    if (eventId && userId) {
+      fetchRSVPStatus();
+    }
+  }, [eventId, userId]);
 
   const handleRSVP = async () => {
     if (!eventId) {
@@ -24,9 +44,8 @@ const RSVPForm = ({ eventId }) => {
 
     try {
       const response = await rsvpToEvent(eventId, status);
-       console.log('response', response);
-      if (response.data ) {
-        setSubmitted(true); 
+      if (response.data) {
+        setSubmitted(true);
       } else {
         setError("Invalid response from server");
       }

@@ -2,7 +2,6 @@ const cron = require("node-cron");
 const { sendReminderEmail } = require("../services/emailService");
 const Event = require("../models/Event");
 
-// Schedule a cron job to send event reminders
 const scheduleEventReminder = (event) => {
   if (event.reminderTime) {
     const reminderDate = new Date(event.reminderTime);
@@ -12,11 +11,11 @@ const scheduleEventReminder = (event) => {
         reminderDate.getMonth() + 1
       } *`,
       () => {
-        sendReminderEmail(event.email, event); // Send reminder email
+        sendReminderEmail(event.email, event); 
       },
       {
         scheduled: true,
-        timezone: "Asia/Kolkata", // Adjust based on your timezone
+        timezone: "Asia/Kolkata", 
       }
     );
 
